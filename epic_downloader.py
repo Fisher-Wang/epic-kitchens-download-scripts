@@ -38,7 +38,7 @@ class EpicDownloader:
         self.base_url_55 = epic_55_base_url.rstrip('/')
         self.base_url_100 = epic_100_base_url.rstrip('/')
         self.base_url_masks = masks_base_url.rstrip('/')
-        self.base_output = os.path.join(base_output, 'EPIC-KITCHENS')
+        self.base_output = os.path.join(os.path.expanduser(base_output), 'EPIC-KITCHENS')
         self.videos_per_split = {}
         self.challenges_splits = []
         self.md5 = {'55': {}, '100': {}, 'errata': {}}
@@ -68,9 +68,9 @@ class EpicDownloader:
         Path(os.path.dirname(output_path)).mkdir(parents=True, exist_ok=True)
 
         try:
-            with urllib.request.urlopen(url) as response, open(output_path, 'wb') as output_file:
-                print('Downloading\nfrom  {}\nto    {}'.format(url, output_path))
-                shutil.copyfileobj(response, output_file)
+            print('Downloading\nfrom  {}\nto    {}'.format(url, output_path))
+            dir_path, file_name = os.path.split(output_path)
+            os.system(f"aria2c -c -x 16 -s 32 {url} -d {dir_path} -o {file_name}")
         except Exception as e:
             print('Could not download file from {}\nError: {}'.format(url, str(e)))
 
