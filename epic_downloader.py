@@ -234,17 +234,20 @@ class EpicDownloader:
                 self.download_file(url, output_path)
 
     def file_already_downloaded(self, output_path, parts, version):
-        if not os.path.exists(output_path):
-            return False
-
-        key = '/'.join(parts)
-        remote_md5 = self.md5[version].get(key, None)
+        return os.path.exists(output_path) and not os.path.exists(output_path + '.aria2')
         
-        if remote_md5 is None:
-            return False
+    # def file_already_downloaded(self, output_path, parts, version):
+    #     if not os.path.exists(output_path):
+    #         return False
 
-        local_md5 = self.md5_checksum(output_path)  # we already checked file exists so we are safe here
-        return local_md5 == remote_md5
+    #     key = '/'.join(parts)
+    #     remote_md5 = self.md5[version].get(key, None)
+        
+    #     if remote_md5 is None:
+    #         return False
+
+    #     local_md5 = self.md5_checksum(output_path)  # we already checked file exists so we are safe here
+    #     return local_md5 == remote_md5
 
     def download(self, what=('videos', 'rgb_frames', 'flow_frames'), participants='all', specific_videos='all', splits='all',
                  challenges='all', extension_only=False, epic55_only=False):
